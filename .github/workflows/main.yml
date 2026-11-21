@@ -10,15 +10,19 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Configurar Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
       - name: Descomprimir y Compilar APK
         run: |
           unzip -q "*.zip" -d proyecto
           cd proyecto
           if [ -d "android" ]; then cd android; fi
-          chmod +x gradlew || gradle wrapper
-          ./gradlew assembleDebug
+          gradle assembleDebug
       - name: Subir APK listo
         uses: actions/upload-artifact@v4
         with:
           name: Kaiyi-Launcher-APK
           path: "**/app-debug.apk"
+          
