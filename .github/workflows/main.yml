@@ -1,0 +1,24 @@
+name: Compilar Launcher APK
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Descomprimir y Compilar APK
+        run: |
+          unzip -q "*.zip" -d proyecto
+          cd proyecto
+          if [ -d "android" ]; then cd android; fi
+          chmod +x gradlew || gradle wrapper
+          ./gradlew assembleDebug
+      - name: Subir APK listo
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kaiyi-Launcher-APK
+          path: "**/app-debug.apk"
